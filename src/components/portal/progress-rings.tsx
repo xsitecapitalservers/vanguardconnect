@@ -8,12 +8,16 @@ type Props = {
   streakPct: number;
 };
 
+/**
+ * Vanguard rings — antique gold, taupe, ink.
+ * Three nested, all hairline-weight.
+ */
 export function ProgressRings({ watchPct, quizPct, streakPct }: Props) {
   return (
     <div className="relative mx-auto flex h-44 w-44 items-center justify-center">
-      <Ring size={170} stroke={10} pct={watchPct} color="hsl(260 80% 68%)" delay={0} />
-      <Ring size={130} stroke={10} pct={quizPct} color="hsl(160 60% 55%)" delay={0.1} />
-      <Ring size={90} stroke={10} pct={streakPct} color="hsl(35 90% 60%)" delay={0.2} />
+      <Ring size={170} stroke={6} pct={watchPct} color="hsl(40 48% 59%)" delay={0} />
+      <Ring size={130} stroke={6} pct={quizPct} color="hsl(30 24% 44%)" delay={0.1} />
+      <Ring size={90} stroke={6} pct={streakPct} color="hsl(0 0% 4%)" delay={0.2} />
     </div>
   );
 }
@@ -48,7 +52,7 @@ function Ring({
         r={radius}
         fill="none"
         stroke={color}
-        strokeOpacity={0.15}
+        strokeOpacity={0.12}
         strokeWidth={stroke}
       />
       <motion.circle
@@ -58,11 +62,11 @@ function Ring({
         fill="none"
         stroke={color}
         strokeWidth={stroke}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         strokeDasharray={circumference}
         initial={{ strokeDashoffset: circumference }}
         animate={{ strokeDashoffset: circumference - (clamped / 100) * circumference }}
-        transition={{ duration: 1.2, delay, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1.2, delay, ease: [0.32, 0.72, 0, 1] }}
       />
     </svg>
   );

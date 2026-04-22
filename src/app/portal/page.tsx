@@ -3,9 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Eyebrow, HairRule } from "@/components/ui/vanguard";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Flame, Target, Trophy } from "lucide-react";
+import { ArrowUpRight, BookOpen, Flame, Target, Trophy } from "lucide-react";
 import { ProgressRings } from "@/components/portal/progress-rings";
+import { initials } from "@/lib/utils";
 
 export default async function PortalDashboard() {
   const supabase = await createClient();
@@ -27,64 +29,76 @@ export default async function PortalDashboard() {
   const activeCourses = enrollments?.filter((e) => e.status === "active") ?? [];
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8">
-      {/* Greeting */}
-      <div className="flex flex-wrap items-end justify-between gap-4">
+    <div className="mx-auto max-w-6xl space-y-10">
+      {/* Greeting — editorial masthead */}
+      <div className="flex flex-wrap items-end justify-between gap-4 border-b-[0.5px] border-[hsl(var(--rule))] pb-6">
         <div>
-          <p className="text-sm text-muted-foreground">
-            {new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
-          </p>
-          <h1 className="mt-1 font-display text-4xl md:text-5xl">
-            Welcome back, <span className="text-primary">{firstName}</span>.
+          <Eyebrow>
+            {new Date().toLocaleDateString(undefined, {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+            })}
+          </Eyebrow>
+          <h1 className="mt-3 font-display text-[40px] font-medium leading-[1.05] tracking-[-0.015em] md:text-[52px]">
+            Welcome back,{" "}
+            <span className="italic-editorial font-normal">{firstName}.</span>
           </h1>
         </div>
-        <Button variant="gradient" asChild>
+        <Button variant="default" asChild>
           <Link href="/portal/courses">
-            Continue learning <ArrowRight />
+            Continue learning <ArrowUpRight />
           </Link>
         </Button>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <StatCard icon={Flame} label="Current streak" value={`${profile?.streak_days ?? 0} days`} hue="amber" />
-        <StatCard icon={Trophy} label="Total XP" value={profile?.xp ?? 0} hue="indigo" />
-        <StatCard icon={BookOpen} label="Active courses" value={activeCourses.length} hue="emerald" />
-        <StatCard icon={Target} label="Weekly goal" value="4 / 7 days" hue="rose" />
+      {/* Stat cards — editorial ledger entries */}
+      <div className="grid grid-cols-2 gap-px bg-[hsl(var(--rule))] md:grid-cols-4">
+        <StatCard icon={Flame} label="Current streak" value={`${profile?.streak_days ?? 0}`} unit="days" />
+        <StatCard icon={Trophy} label="Total XP" value={String(profile?.xp ?? 0)} unit="points" />
+        <StatCard icon={BookOpen} label="Active courses" value={String(activeCourses.length)} unit="in progress" />
+        <StatCard icon={Target} label="Weekly goal" value="4 / 7" unit="days met" />
       </div>
 
       {/* Rings + Continue */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+        <Card variant="editorial" className="lg:col-span-2">
           <CardHeader>
+            <Eyebrow>Section I · Resume</Eyebrow>
             <CardTitle>Pick up where you left off</CardTitle>
             <CardDescription>Your most recent courses.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3">
             {activeCourses.length === 0 ? (
               <EmptyState />
             ) : (
               activeCourses.slice(0, 3).map((enrollment) => {
-                const course = (enrollment as { course: { slug: string; title: string; subtitle: string | null } | null }).course;
+                const course = (enrollment as {
+                  course: { slug: string; title: string; subtitle: string | null } | null;
+                }).course;
                 if (!course) return null;
                 return (
                   <Link
                     key={enrollment.id}
                     href={`/portal/courses/${course.slug}`}
-                    className="group block rounded-xl border border-border p-4 transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
+                    className="group block border-[0.5px] border-[hsl(var(--rule))] rounded-[2px] p-4 transition-colors hover:border-[hsl(var(--fg-1))]"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <h3 className="font-semibold">{course.title}</h3>
-                        <p className="mt-0.5 text-sm text-muted-foreground">{course.subtitle}</p>
-                        <div className="mt-3 flex items-center gap-3">
-                          <Progress value={Number(enrollment.progress_pct)} className="h-1.5 flex-1" />
-                          <span className="text-xs font-medium text-muted-foreground">
+                        <h3 className="font-display text-[18px] font-medium leading-tight">
+                          {course.title}
+                        </h3>
+                        <p className="mt-1 text-[13px] text-[hsl(var(--fg-3))]">
+                          {course.subtitle}
+                        </p>
+                        <div className="mt-4 flex items-center gap-3">
+                          <Progress value={Number(enrollment.progress_pct)} className="flex-1" />
+                          <span className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-[hsl(var(--fg-3))]">
                             {Math.round(Number(enrollment.progress_pct))}%
                           </span>
                         </div>
                       </div>
-                      <ArrowRight className="mt-1 h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+                      <ArrowUpRight className="mt-1 h-4 w-4 text-[hsl(var(--fg-4))] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[hsl(var(--fg-1))]" />
                     </div>
                   </Link>
                 );
@@ -93,50 +107,52 @@ export default async function PortalDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card variant="editorial">
           <CardHeader>
+            <Eyebrow>Section II · The Day</Eyebrow>
             <CardTitle>Your rings</CardTitle>
             <CardDescription>Today&apos;s activity.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ProgressRings watchPct={65} quizPct={82} streakPct={(profile?.streak_days ?? 0) % 7 * 14} />
-            <div className="mt-6 space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Watch time</span>
-                <span className="font-medium">26 / 40 min</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Quiz accuracy</span>
-                <span className="font-medium">82%</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Streak</span>
-                <span className="font-medium">{profile?.streak_days ?? 0} days</span>
-              </div>
+            <ProgressRings
+              watchPct={65}
+              quizPct={82}
+              streakPct={((profile?.streak_days ?? 0) % 7) * 14}
+            />
+            <div className="mt-8 space-y-3 border-t-[0.5px] border-[hsl(var(--rule))] pt-4">
+              <LedgerRow label="Watch time" value="26 / 40 min" />
+              <LedgerRow label="Quiz accuracy" value="82%" />
+              <LedgerRow label="Streak" value={`${profile?.streak_days ?? 0} days`} />
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Cohort feed placeholder */}
-      <Card>
+      {/* Cohort feed — editorial dispatch list */}
+      <Card variant="editorial">
         <CardHeader>
-          <CardTitle>Cohort feed</CardTitle>
+          <Eyebrow>Section III · The Cohort</Eyebrow>
+          <CardTitle>Dispatches</CardTitle>
           <CardDescription>What classmates are up to.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-0">
           {[
-            { who: "Sam", what: "just earned the 30-day streak badge", when: "2m" },
-            { who: "Priya", what: "completed Module 3: Advanced Techniques", when: "12m" },
-            { who: "Kai", what: "scored 100% on Quiz: Foundations", when: "1h" },
-          ].map((item, i) => (
-            <div key={i} className="flex items-center gap-3 rounded-lg border border-border/60 p-3">
-              <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-primary to-brand-700" />
-              <p className="flex-1 text-sm">
-                <span className="font-medium">{item.who}</span>{" "}
-                <span className="text-muted-foreground">{item.what}</span>
-              </p>
-              <Badge variant="secondary">{item.when}</Badge>
+            { who: "Sam", what: "earned the 30-day streak badge", when: "2m" },
+            { who: "Priya", what: "completed Module 3 · Advanced Techniques", when: "12m" },
+            { who: "Kai", what: "scored 100% on Quiz · Foundations", when: "1h" },
+          ].map((item, i, arr) => (
+            <div key={i}>
+              <div className="flex items-center gap-4 py-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--bg-inverse))] font-display text-[12px] font-medium text-[hsl(var(--bg-1))]">
+                  {initials(item.who)}
+                </div>
+                <p className="flex-1 text-[14px] leading-snug">
+                  <span className="font-display font-medium">{item.who}</span>{" "}
+                  <span className="text-[hsl(var(--fg-3))]">{item.what}</span>
+                </p>
+                <Badge variant="outline">{item.when}</Badge>
+              </div>
+              {i < arr.length - 1 && <HairRule />}
             </div>
           ))}
         </CardContent>
@@ -149,40 +165,47 @@ function StatCard({
   icon: Icon,
   label,
   value,
-  hue,
+  unit,
 }: {
   icon: React.ElementType;
   label: string;
-  value: string | number;
-  hue: "amber" | "indigo" | "emerald" | "rose";
+  value: string;
+  unit: string;
 }) {
-  const hueClass = {
-    amber: "from-amber-500/20 to-amber-500/5 text-amber-600 dark:text-amber-400",
-    indigo: "from-primary/20 to-primary/5 text-primary",
-    emerald: "from-emerald-500/20 to-emerald-500/5 text-emerald-600 dark:text-emerald-400",
-    rose: "from-rose-500/20 to-rose-500/5 text-rose-600 dark:text-rose-400",
-  }[hue];
-
   return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-5">
-        <div className={`inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${hueClass}`}>
-          <Icon className="h-4 w-4" />
-        </div>
-        <p className="mt-3 text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
-        <p className="mt-1 text-2xl font-semibold">{value}</p>
-      </CardContent>
-    </Card>
+    <div className="bg-[hsl(var(--bg-1))] p-6">
+      <div className="flex items-start justify-between">
+        <Icon className="h-4 w-4 text-[hsl(var(--gold-deep))]" strokeWidth={1.5} />
+        <span className="font-mono text-[9px] font-medium uppercase tracking-[0.22em] text-[hsl(var(--fg-4))]">
+          {unit}
+        </span>
+      </div>
+      <p className="mt-6 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-[hsl(var(--fg-3))]">
+        {label}
+      </p>
+      <p className="mt-2 font-display text-[40px] font-medium leading-none tracking-[-0.02em] numerals-oldstyle">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function LedgerRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between font-mono text-[11px]">
+      <span className="uppercase tracking-[0.18em] text-[hsl(var(--fg-3))]">{label}</span>
+      <span className="font-medium text-[hsl(var(--fg-1))]">{value}</span>
+    </div>
   );
 }
 
 function EmptyState() {
   return (
-    <div className="rounded-lg border border-dashed border-border p-8 text-center">
-      <BookOpen className="mx-auto h-8 w-8 text-muted-foreground" />
-      <p className="mt-3 text-sm font-medium">No courses yet</p>
-      <p className="mt-1 text-sm text-muted-foreground">Browse the catalog to get started.</p>
-      <Button asChild size="sm" className="mt-4">
+    <div className="border-[0.5px] border-dashed border-[hsl(var(--rule))] rounded-[2px] p-10 text-center">
+      <BookOpen className="mx-auto h-8 w-8 text-[hsl(var(--fg-4))]" strokeWidth={1.5} />
+      <p className="mt-4 font-display text-[18px] font-medium">No courses yet</p>
+      <p className="mt-1 text-[13px] text-[hsl(var(--fg-3))]">Browse the catalog to get started.</p>
+      <Button asChild size="sm" variant="outline" className="mt-6">
         <Link href="/courses">Explore courses</Link>
       </Button>
     </div>

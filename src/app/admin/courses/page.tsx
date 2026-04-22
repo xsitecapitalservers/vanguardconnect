@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Eyebrow } from "@/components/ui/vanguard";
 import { Plus } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
@@ -14,13 +15,18 @@ export default async function AdminCoursesPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6">
-      <div className="flex items-end justify-between">
+    <div className="mx-auto max-w-7xl space-y-8">
+      <div className="flex items-end justify-between border-b-[0.5px] border-[hsl(var(--rule))] pb-6">
         <div>
-          <h1 className="font-display text-4xl">Courses</h1>
-          <p className="mt-1 text-muted-foreground">Create, edit, and publish the catalog.</p>
+          <Eyebrow>Editorial Desk · Curriculum</Eyebrow>
+          <h1 className="mt-3 font-display text-[40px] font-medium leading-[1.05] tracking-[-0.015em]">
+            Courses
+          </h1>
+          <p className="mt-2 text-[14px] text-[hsl(var(--fg-3))]">
+            Create, edit, and publish the catalog.
+          </p>
         </div>
-        <Button asChild variant="gradient">
+        <Button asChild variant="default">
           <Link href="/admin/courses/new">
             <Plus /> New course
           </Link>
@@ -28,21 +34,25 @@ export default async function AdminCoursesPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {(courses ?? []).map((c) => (
+        {(courses ?? []).map((c, i) => (
           <Link key={c.id} href={`/admin/courses/${c.id}`}>
-            <Card className="overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-lg">
-              <div className="h-24 bg-gradient-to-br from-primary/40 via-brand-600/40 to-accent-amber/30" />
+            <Card variant="editorial" className="overflow-hidden transition-colors hover:border-t-[hsl(var(--fg-1))]">
+              <div className="relative h-24 bg-[hsl(var(--bg-2))] border-b-[0.5px] border-[hsl(var(--rule))]">
+                <span className="absolute left-5 top-4 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-[hsl(var(--gold-deep))]">
+                  №&nbsp;{String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
               <CardContent className="p-5">
                 <div className="flex items-center justify-between">
-                  <Badge variant={c.is_published ? "success" : "secondary"}>
+                  <Badge variant={c.is_published ? "success" : "muted"}>
                     {c.is_published ? "Published" : "Draft"}
                   </Badge>
-                  <span className="font-mono text-sm">
+                  <span className="font-mono text-[12px] font-medium numerals-tabular">
                     {formatCurrency(c.price_cents, c.currency)}
                   </span>
                 </div>
-                <h3 className="mt-3 font-semibold">{c.title}</h3>
-                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{c.subtitle}</p>
+                <h3 className="mt-3 font-display text-[18px] font-medium leading-tight">{c.title}</h3>
+                <p className="mt-1 line-clamp-2 text-[13px] text-[hsl(var(--fg-3))]">{c.subtitle}</p>
               </CardContent>
             </Card>
           </Link>
