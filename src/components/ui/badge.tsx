@@ -2,22 +2,33 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
+/**
+ * Vanguard badge — mono, all-caps, wide tracking.
+ * Replaces colorful SaaS pills with an ink/gold/outline palette.
+ */
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center gap-1.5 font-mono font-medium uppercase tracking-[0.18em] text-[10px] px-2 py-[3px] rounded-[2px] border-[0.5px]",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary/10 text-primary",
+          "bg-[hsl(var(--bg-inverse))] text-[hsl(var(--bg-1))] border-[hsl(var(--bg-inverse))]",
+        outline:
+          "bg-transparent text-[hsl(var(--fg-1))] border-[hsl(var(--fg-1))]",
+        gold:
+          "bg-[hsl(var(--gold))] text-[hsl(var(--bg-inverse))] border-[hsl(var(--gold))]",
+        goldOutline:
+          "bg-transparent text-[hsl(var(--gold-deep))] border-[hsl(var(--gold))]",
+        muted:
+          "bg-[hsl(var(--bg-3))] text-[hsl(var(--fg-2))] border-transparent",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground",
+          "bg-[hsl(var(--bg-2))] text-[hsl(var(--fg-1))] border-[hsl(var(--rule))]",
         success:
-          "border-transparent bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+          "bg-transparent text-[#4A6B4A] border-[#4A6B4A]",
         warning:
-          "border-transparent bg-amber-500/15 text-amber-700 dark:text-amber-400",
+          "bg-transparent text-[#B88040] border-[#B88040]",
         destructive:
-          "border-transparent bg-destructive/15 text-destructive",
-        outline: "text-foreground",
+          "bg-transparent text-[#A04040] border-[#A04040]",
       },
     },
     defaultVariants: { variant: "default" },

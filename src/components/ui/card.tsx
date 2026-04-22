@@ -1,19 +1,30 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow-sm transition-all",
-      className
-    )}
-    {...props}
-  />
-));
+/**
+ * Vanguard card — hairline rule + generous padding. No shadow by default.
+ */
+type CardProps = React.HTMLAttributes<HTMLDivElement> & {
+  variant?: "default" | "editorial" | "flat";
+};
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant = "default", ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "bg-[hsl(var(--bg-1))] text-[hsl(var(--fg-1))] transition-all",
+        variant === "default" &&
+          "border-[0.5px] border-[hsl(var(--rule))] rounded-[4px]",
+        variant === "editorial" &&
+          "border-t-[0.5px] border-t-[hsl(var(--gold))] rounded-none",
+        variant === "flat" && "rounded-none",
+        className
+      )}
+      {...props}
+    />
+  )
+);
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<
@@ -22,7 +33,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    className={cn("flex flex-col gap-2 p-6", className)}
     {...props}
   />
 ));
@@ -34,7 +45,10 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    className={cn(
+      "font-display text-[22px] font-medium leading-tight tracking-[-0.01em] text-[hsl(var(--fg-1))]",
+      className
+    )}
     {...props}
   />
 ));
@@ -46,7 +60,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-[hsl(var(--fg-3))]", className)}
     {...props}
   />
 ));

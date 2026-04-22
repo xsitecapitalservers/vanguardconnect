@@ -1,32 +1,49 @@
 import type { Metadata } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Bodoni_Moda, Cormorant_Garamond, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "sonner";
 
-const inter = Inter({
+const display = Bodoni_Moda({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const editorial = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-editorial",
+  display: "swap",
+});
+
+const sans = Inter_Tight({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const serif = Instrument_Serif({
+const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-display",
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Vanguard — Learn, Level Up, Lead",
-    template: "%s · Vanguard",
+    default: "Vanguard Connect — Built for the institutions that set the standard",
+    template: "%s · Vanguard Connect",
   },
   description:
-    "Premium courses, mentorship, and mentee tracking. Built for ambitious learners and the teams that grow them.",
+    "A full-suite operating system for executive education and professional coaching. The roster, the reading list, the calendar, the grades — in one considered room.",
   openGraph: {
     type: "website",
-    siteName: "Vanguard",
+    siteName: "Vanguard Connect",
   },
 };
 
@@ -38,11 +55,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${serif.variable} font-sans antialiased`}
+        className={`${display.variable} ${editorial.variable} ${sans.variable} ${mono.variable} font-sans antialiased`}
       >
         <Providers>
           {children}
-          <Toaster position="top-right" richColors closeButton />
+          <Toaster position="top-right" closeButton theme="light" />
         </Providers>
       </body>
     </html>
