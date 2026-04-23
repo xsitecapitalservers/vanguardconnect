@@ -57,12 +57,12 @@ export default function LandingPage() {
             <Eyebrow>
               Vol. <Roman n={1} /> · Spring Cohort · MMXXVI
             </Eyebrow>
-            <h1 className="mt-6 font-display text-[64px] font-medium leading-[0.98] tracking-[-0.015em] md:text-[92px]">
-              Built for the
+            <h1 className="mt-6 font-display text-[56px] font-medium leading-[0.98] tracking-[-0.015em] md:text-[80px]">
+              Welcome to the
               <br />
-              <span className="italic-editorial font-normal">institutions</span>
+              <span className="italic-editorial font-normal">Vanguard School</span>
               <br />
-              that set the standard.
+              of Multifamily Investing.
             </h1>
             <p className="mt-8 max-w-xl font-editorial text-[19px] leading-[1.55] text-[hsl(var(--fg-2))] md:text-[21px]">
               Vanguard Connect is the composed workspace behind serious programs —

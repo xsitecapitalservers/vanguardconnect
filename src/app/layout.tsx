@@ -36,11 +36,11 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vanguard Connect — Built for the institutions that set the standard",
+    default: "Vanguard Connect — The Vanguard School of Multifamily Investing",
     template: "%s · Vanguard Connect",
   },
   description:
-    "A full-suite operating system for executive education and professional coaching. The roster, the reading list, the calendar, the grades — in one considered room.",
+    "The Vanguard School of Multifamily Investing — a composed, cohort-based education platform for serious operators. Curriculum, cohort, coaches, and credentials in one considered room.",
   openGraph: {
     type: "website",
     siteName: "Vanguard Connect",
