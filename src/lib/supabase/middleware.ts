@@ -11,6 +11,7 @@ const PUBLIC_PATHS = [
   "/courses",
   "/programs",
   "/auth/callback",
+  "/auth/auth-code-error",
   "/api/stripe/webhook",
   "/api/mux/webhook",
 ];
