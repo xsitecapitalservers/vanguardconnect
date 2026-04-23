@@ -63,12 +63,21 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (user) {
-    // Fetch role from profiles
+    // Fetch role + deactivation from profiles
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, deactivated_at")
       .eq("id", user.id)
       .single();
+
+    // Deactivated users are signed out and sent to login with a notice
+    if (profile?.deactivated_at) {
+      await supabase.auth.signOut();
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("error", "deactivated");
+      return NextResponse.redirect(url);
+    }
 
     const role = profile?.role ?? "student";
     const isTeam = TEAM_ROLES.has(role);
